@@ -74,7 +74,7 @@ func (r *DOMachineReconciler) SetupWithManager(ctx context.Context, mgr ctrl.Man
 		Watches(
 			&clusterv1.Cluster{},
 			handler.EnqueueRequestsFromMapFunc(clusterToObjectFunc),
-			builder.WithPredicates(predicates.ClusterPausedTransitionsOrInfrastructureReady(mgr.GetScheme(), ctrl.LoggerFrom(ctx))),
+			builder.WithPredicates(predicates.ClusterPausedTransitionsOrInfrastructureProvisioned(mgr.GetScheme(), ctrl.LoggerFrom(ctx))),
 		).
 		Complete(r)
 }
@@ -243,7 +243,7 @@ func (r *DOMachineReconciler) reconcile(ctx context.Context, machineScope *scope
 	// If the DOMachine doesn't have our finalizer, add it.
 	controllerutil.AddFinalizer(domachine, infrav1.MachineFinalizer)
 
-	if !machineScope.Cluster.Status.InfrastructureReady {
+	if machineScope.Cluster.Status.Initialization.InfrastructureProvisioned == nil || !*machineScope.Cluster.Status.Initialization.InfrastructureProvisioned {
 		machineScope.Info("Cluster infrastructure is not ready yet")
 		return reconcile.Result{}, nil
 	}

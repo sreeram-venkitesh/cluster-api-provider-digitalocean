@@ -22,7 +22,6 @@ import (
 
 	. "github.com/onsi/gomega"
 
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
@@ -74,11 +73,10 @@ func newMachine(clusterName, machineName string) *clusterv1.Machine {
 
 func newMachineWithInfrastructureRef(clusterName, machineName string) *clusterv1.Machine {
 	m := newMachine(clusterName, machineName)
-	m.Spec.InfrastructureRef = corev1.ObjectReference{
-		Kind:       "DOMachine",
-		Namespace:  "",
-		Name:       machineName,
-		APIVersion: infrav1.GroupVersion.String(),
+	m.Spec.InfrastructureRef = clusterv1.ContractVersionedObjectReference{
+		Kind:     "DOMachine",
+		Name:     machineName,
+		APIGroup: infrav1.GroupVersion.String(),
 	}
 	return m
 }
