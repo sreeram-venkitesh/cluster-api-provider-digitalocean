@@ -33,7 +33,6 @@ import (
 
 	clusterv1 "sigs.k8s.io/cluster-api/api/core/v1beta1"
 	capierrors "sigs.k8s.io/cluster-api/errors" //nolint:staticcheck
-	"sigs.k8s.io/cluster-api/util"
 	"sigs.k8s.io/cluster-api/util/patch"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -119,12 +118,13 @@ func (m *MachineScope) Namespace() string {
 
 // IsControlPlane returns true if the machine is a control plane.
 func (m *MachineScope) IsControlPlane() bool {
-	return util.IsControlPlaneMachine(m.Machine)
+	_, ok := m.Machine.Labels[clusterv1.MachineControlPlaneLabel]
+	return ok
 }
 
 // Role returns the machine role from the labels.
 func (m *MachineScope) Role() string {
-	if util.IsControlPlaneMachine(m.Machine) {
+	if _, ok := m.Machine.Labels[clusterv1.MachineControlPlaneLabel]; ok {
 		return infrav1.APIServerRoleTagValue
 	}
 	return infrav1.NodeRoleTagValue
