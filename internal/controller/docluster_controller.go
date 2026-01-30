@@ -32,7 +32,7 @@ import (
 	"sigs.k8s.io/cluster-api-provider-digitalocean/cloud/services/networking"
 	dnsutil "sigs.k8s.io/cluster-api-provider-digitalocean/util/dns"
 	"sigs.k8s.io/cluster-api-provider-digitalocean/util/reconciler"
-	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
+	clusterv1 "sigs.k8s.io/cluster-api/api/core/v1beta1"
 	"sigs.k8s.io/cluster-api/util"
 	"sigs.k8s.io/cluster-api/util/annotations"
 	"sigs.k8s.io/cluster-api/util/predicates"
